@@ -1,28 +1,34 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-       File dir = new File("folder4/folder3/folder2/folder1");
-       File file = new File("folder4/folder3/folder2/folder1/file1.txt");
-       File file2 = new File("folder4/folder3/folder2/folder1/file2.txt");
-       File file3 = new File("folder4/folder3/folder2/folder1/file3.txt");
+        String path = "folder1/folder2/folder3";
 
-        try {
-            dir.mkdirs();
-            file.createNewFile();
-            file2.createNewFile();
-            file3.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        File dir = new File(path);
+        List<File> files = new ArrayList<>();
+
+        files.add(new File(path + "/Sochi.txt"));
+        files.add(new File(path + "/Moscow.txt"));
+        files.add(new File(path + "/Anapa.txt"));
+        files.add(new File(path + "/Armenia.txt"));
+        files.add(new File(path + "/astrakhan.txt"));
+
+        dir.mkdirs();
+        for(File i : files){
+            try {
+                i.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
-        File[] files = dir.listFiles(((dir1, name) -> name.contains("1")));
+        File[] res = dir.listFiles((dir1, name) -> name.startsWith("A") | name.startsWith("a"));
 
-        for(File f : files){
-            System.out.println(f.getName());
+        for (File f : res) {
+            System.out.println(f.getAbsolutePath());
         }
-
     }
 }
