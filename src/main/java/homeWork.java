@@ -5,7 +5,7 @@ public class homeWork {
     public static void main(String[] args) {
         File dir = new File("folderHW");
         File file = new File(dir, "fileHW");
-        ;
+        
         dir.mkdir();
         try {
             file.createNewFile();
@@ -13,28 +13,22 @@ public class homeWork {
             throw new RuntimeException(e);
         }
 
-        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file, true))) {
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r")) {
             Scanner scanner = new Scanner(System.in);
-            String name = scanner.nextLine();
-            while (!name.equals("стоп")) {
-                outputStream.write(name.getBytes());
-                outputStream.write("\n".getBytes());
-                name = scanner.nextLine();
+            System.out.println("Enter page or \"stop\" to break");
+            String page_or_stop = scanner.nextLine();
+            while (!page_or_stop.equals("stop")) {
+                byte[] one_page = new byte[3000];
+                int page = Integer.parseInt(page_or_stop);
+                randomAccessFile.seek(page * one_page.length - one_page.length);
+                int count = randomAccessFile.read(one_page);
+                System.out.println(new String(one_page, 0, count));
+                System.out.println("Enter page or \"stop\" to break");
+                page_or_stop = scanner.nextLine();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        try (Reader reader = new InputStreamReader(new FileInputStream(file))) {
-            int res = reader.read();
-            StringBuilder stringBuilder = new StringBuilder();
-            while (res != -1) {
-                stringBuilder.append((char) res);
-                res = reader.read();
-            }
-            System.out.println(stringBuilder);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
     }
 }

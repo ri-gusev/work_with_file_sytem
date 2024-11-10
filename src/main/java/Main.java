@@ -6,16 +6,11 @@ public class Main {
         File dir = new File("testFolder");
         File file = new File(dir, "f.txt");
 
-        try (InputStream inputStream = new BufferedInputStream(new FileInputStream(file))) {
-            long before = System.currentTimeMillis();
-            int a = inputStream.read();
-            StringBuilder result = new StringBuilder();
-            while (a != -1) {
-                result.append((char) a);
-                a = inputStream.read();
-            }
-            long after = System.currentTimeMillis();
-            System.out.println(after - before);
+        try (RandomAccessFile randomAccessFile = new RandomAccessFile(file, "rw")) {
+            randomAccessFile.seek(0);
+            byte[] array = new byte[(int) file.length()];
+            randomAccessFile.read(array);
+            System.out.println(new String(array));
         } catch (Exception e) {
             e.printStackTrace();
         }
